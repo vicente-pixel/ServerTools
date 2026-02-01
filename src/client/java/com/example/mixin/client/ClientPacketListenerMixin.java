@@ -1,6 +1,6 @@
 package com.example.mixin.client;
 
-import com.example.WorldDownloader;
+import com.example.ChunkDownloader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -16,8 +16,8 @@ public class ClientPacketListenerMixin {
 
     @Inject(method = "handleLevelChunkWithLight", at = @At("TAIL"))
     private void onChunkData(ClientboundLevelChunkWithLightPacket packet, CallbackInfo ci) {
-        WorldDownloader wdl = WorldDownloader.getInstance();
-        if (!wdl.isDownloading()) return;
+        ChunkDownloader downloader = ChunkDownloader.getInstance();
+        if (!downloader.isDownloading()) return;
 
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
@@ -28,7 +28,7 @@ public class ClientPacketListenerMixin {
 
         LevelChunk chunk = level.getChunk(chunkX, chunkZ);
         if (chunk != null) {
-            wdl.saveChunk(chunk);
+            downloader.saveChunk(chunk);
         }
     }
 }

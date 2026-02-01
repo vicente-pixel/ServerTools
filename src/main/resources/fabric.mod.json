@@ -1,22 +1,23 @@
 {
 	"schemaVersion": 1,
-	"id": "worlddownloader",
+	"id": "servertools",
 	"version": "${version}",
-	"name": "World Downloader",
-	"description": "Download chunks from multiplayer servers to play offline. Press F9 to toggle downloading.",
+	"name": "Server Tools",
+	"description": "A collection of tools for capturing and downloading server data: chunks, NPCs, menus, sounds, maps, and more.",
 	"authors": [],
 	"contact": {},
 	"license": "CC0-1.0",
-	"icon": "assets/worlddownloader/icon.png",
+	"icon": "assets/servertools/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"com.example.WorldDownloaderClient"
+			"com.example.ServerToolsClient"
 		]
 	},
+	"accessWidener": "servertools.accesswidener",
 	"mixins": [
 		{
-			"config": "worlddownloader.client.mixins.json",
+			"config": "servertools.client.mixins.json",
 			"environment": "client"
 		}
 	],

@@ -4,7 +4,11 @@
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"ClientPacketListenerMixin",
-		"MinecraftMixin"
+		"MinecraftMixin",
+		"SoundManagerAccessor",
+		"SoundEngineAccessor",
+		"ChatComponentAccessor",
+		"ChatComponentMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

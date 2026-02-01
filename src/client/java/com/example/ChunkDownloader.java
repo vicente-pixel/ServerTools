@@ -10,7 +10,6 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -32,10 +31,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WorldDownloader {
-    public static final Logger LOGGER = LoggerFactory.getLogger("WorldDownloader");
+public class ChunkDownloader {
+    public static final Logger LOGGER = LoggerFactory.getLogger("ChunkDownloader");
 
-    private static WorldDownloader instance;
+    private static ChunkDownloader instance;
 
     private boolean downloading = false;
     private Path saveDirectory;
@@ -46,9 +45,9 @@ public class WorldDownloader {
     private int chunksDownloaded = 0;
     private int entitiesSaved = 0;
 
-    public static WorldDownloader getInstance() {
+    public static ChunkDownloader getInstance() {
         if (instance == null) {
-            instance = new WorldDownloader();
+            instance = new ChunkDownloader();
         }
         return instance;
     }
@@ -73,7 +72,7 @@ public class WorldDownloader {
         }
 
         String serverName = getServerName();
-        worldName = "WDL_" + serverName + "_" + System.currentTimeMillis();
+        worldName = "ST_" + serverName + "_" + System.currentTimeMillis();
         saveDirectory = mc.gameDirectory.toPath().resolve("saves").resolve(worldName);
 
         try {
@@ -321,32 +320,6 @@ public class WorldDownloader {
         CompoundTag heightmaps = new CompoundTag();
         tag.put("Heightmaps", heightmaps);
 
-        // Save entities in chunk
-        ListTag entitiesTag = new ListTag();
-        ChunkPos chunkPos = chunk.getPos();
-        AABB chunkBounds = new AABB(
-                chunkPos.getMinBlockX(), level.getMinY(), chunkPos.getMinBlockZ(),
-                chunkPos.getMaxBlockX() + 1, level.getMaxY(), chunkPos.getMaxBlockZ() + 1
-        );
-
-        for (Entity entity : level.getEntities((Entity) null, chunkBounds, e -> !(e instanceof Player))) {
-            try {
-                CompoundTag entityTag = new CompoundTag();
-                // Save entity position and type
-                entityTag.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString());
-                entityTag.putDouble("x", entity.getX());
-                entityTag.putDouble("y", entity.getY());
-                entityTag.putDouble("z", entity.getZ());
-                entityTag.putFloat("yRot", entity.getYRot());
-                entityTag.putFloat("xRot", entity.getXRot());
-                entityTag.putString("UUID", entity.getUUID().toString());
-                entitiesTag.add(entityTag);
-            } catch (Exception e) {
-                LOGGER.warn("Failed to save entity {} at {}", entity.getType(), entity.position(), e);
-            }
-        }
-        tag.put("entities", entitiesTag);
-
         return tag;
     }
 
@@ -402,16 +375,10 @@ public class WorldDownloader {
             });
 
             if (entityFile != null) {
-                // Create entity chunk data
                 CompoundTag entityChunkTag = new CompoundTag();
                 entityChunkTag.putInt("DataVersion", 4189);
+                entityChunkTag.putIntArray("Position", new int[]{pos.x, pos.z});
 
-                CompoundTag position = new CompoundTag();
-                position.putInt("x", pos.x);
-                position.putInt("z", pos.z);
-                entityChunkTag.put("Position", position);
-
-                // Collect entities in this chunk
                 ListTag entitiesTag = new ListTag();
                 AABB chunkBounds = new AABB(
                         pos.getMinBlockX(), level.getMinY(), pos.getMinBlockZ(),
@@ -487,7 +454,6 @@ public class WorldDownloader {
             data.putInt("SpawnZ", 0);
         }
 
-        // WorldGenSettings - required by Minecraft 1.21
         CompoundTag worldGenSettings = new CompoundTag();
         worldGenSettings.putLong("seed", 0L);
         worldGenSettings.putBoolean("generate_features", true);
@@ -495,41 +461,45 @@ public class WorldDownloader {
 
         CompoundTag dimensions = new CompoundTag();
 
-        // Overworld
         CompoundTag overworld = new CompoundTag();
         overworld.putString("type", "minecraft:overworld");
         CompoundTag overworldGen = new CompoundTag();
-        overworldGen.putString("type", "minecraft:noise");
-        overworldGen.putString("settings", "minecraft:overworld");
-        CompoundTag overworldBiomeSource = new CompoundTag();
-        overworldBiomeSource.putString("type", "minecraft:multi_noise");
-        overworldBiomeSource.putString("preset", "minecraft:overworld");
-        overworldGen.put("biome_source", overworldBiomeSource);
+        overworldGen.putString("type", "minecraft:flat");
+        CompoundTag overworldFlatSettings = new CompoundTag();
+        overworldFlatSettings.put("layers", new ListTag());
+        overworldFlatSettings.putString("biome", "minecraft:the_void");
+        overworldFlatSettings.putBoolean("features", false);
+        overworldFlatSettings.putBoolean("lakes", false);
+        overworldFlatSettings.put("structure_overrides", new ListTag());
+        overworldGen.put("settings", overworldFlatSettings);
         overworld.put("generator", overworldGen);
         dimensions.put("minecraft:overworld", overworld);
 
-        // Nether
         CompoundTag nether = new CompoundTag();
         nether.putString("type", "minecraft:the_nether");
         CompoundTag netherGen = new CompoundTag();
-        netherGen.putString("type", "minecraft:noise");
-        netherGen.putString("settings", "minecraft:nether");
-        CompoundTag netherBiomeSource = new CompoundTag();
-        netherBiomeSource.putString("type", "minecraft:multi_noise");
-        netherBiomeSource.putString("preset", "minecraft:nether");
-        netherGen.put("biome_source", netherBiomeSource);
+        netherGen.putString("type", "minecraft:flat");
+        CompoundTag netherFlatSettings = new CompoundTag();
+        netherFlatSettings.put("layers", new ListTag());
+        netherFlatSettings.putString("biome", "minecraft:the_void");
+        netherFlatSettings.putBoolean("features", false);
+        netherFlatSettings.putBoolean("lakes", false);
+        netherFlatSettings.put("structure_overrides", new ListTag());
+        netherGen.put("settings", netherFlatSettings);
         nether.put("generator", netherGen);
         dimensions.put("minecraft:the_nether", nether);
 
-        // The End
         CompoundTag theEnd = new CompoundTag();
         theEnd.putString("type", "minecraft:the_end");
         CompoundTag endGen = new CompoundTag();
-        endGen.putString("type", "minecraft:noise");
-        endGen.putString("settings", "minecraft:end");
-        CompoundTag endBiomeSource = new CompoundTag();
-        endBiomeSource.putString("type", "minecraft:the_end");
-        endGen.put("biome_source", endBiomeSource);
+        endGen.putString("type", "minecraft:flat");
+        CompoundTag endFlatSettings = new CompoundTag();
+        endFlatSettings.put("layers", new ListTag());
+        endFlatSettings.putString("biome", "minecraft:the_void");
+        endFlatSettings.putBoolean("features", false);
+        endFlatSettings.putBoolean("lakes", false);
+        endFlatSettings.put("structure_overrides", new ListTag());
+        endGen.put("settings", endFlatSettings);
         theEnd.put("generator", endGen);
         dimensions.put("minecraft:the_end", theEnd);
 
@@ -555,7 +525,7 @@ public class WorldDownloader {
         gameRules.putString("doImmediateRespawn", "false");
         gameRules.putString("doLimitedCrafting", "false");
         gameRules.putString("doMobLoot", "true");
-        gameRules.putString("doMobSpawning", "true");
+        gameRules.putString("doMobSpawning", "false");
         gameRules.putString("doPatrolSpawning", "true");
         gameRules.putString("doTileDrops", "true");
         gameRules.putString("doTraderSpawning", "true");
@@ -572,7 +542,7 @@ public class WorldDownloader {
         gameRules.putString("maxEntityCramming", "24");
         gameRules.putString("mobGriefing", "true");
         gameRules.putString("naturalRegeneration", "true");
-        gameRules.putString("randomTickSpeed", "3");
+        gameRules.putString("randomTickSpeed", "0");
         gameRules.putString("reducedDebugInfo", "false");
         gameRules.putString("sendCommandFeedback", "true");
         gameRules.putString("showDeathMessages", "true");
@@ -616,7 +586,7 @@ public class WorldDownloader {
     private void sendMessage(String message) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            mc.player.displayClientMessage(Component.literal("[WDL] " + message), false);
+            mc.player.displayClientMessage(Component.literal("[ST] " + message), false);
         }
         LOGGER.info(message);
     }

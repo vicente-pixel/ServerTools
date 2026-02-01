@@ -1,67 +1,53 @@
-# World Downloader
+# Server Tools
 
-A Fabric mod for Minecraft 1.21.x that allows you to download chunks from multiplayer servers for offline play.
+A Fabric mod for Minecraft 1.21.x that provides a collection of tools for capturing and downloading server data.
+
+**Use at your own risk!**
 
 ## Features
 
-- Download terrain chunks from multiplayer servers
-- Capture block entities (chests, furnaces, signs, etc.) with their contents
-- Save entities (mobs, animals, items) in downloaded chunks
-- Support for all dimensions (Overworld, Nether, The End)
-- Simple toggle-based operation with keybind
+- **Chunk Download (F9)** - Download terrain chunks for offline play
+- **Menu Capture (J)** - Capture container GUIs with items, lore, and textures
+- **NPC Capture (B)** - Capture NPC skins, holograms, and equipment
+- **Sound Capture (K/N)** - Record playing sounds and sequences
+- **Map Capture (H)** - Capture map art pixel data
+- **Head Capture (G)** - Scan for armor stands with player heads
+  - **Fairy Soul Capture (P)** - Scan for fairy souls in the SkyBlock hub only 
+- **Chat Copy (Ctrl/Cmd+C)** - Copy chat messages with color formatting
 
 ## Requirements
 
 - Minecraft 1.21.x
-- Fabric Loader 0.18.2 or higher
+- Fabric Loader 0.18.2+
 - Fabric API
 
 ## Installation
 
 1. Install Fabric Loader for Minecraft 1.21.x
-2. Download and install Fabric API
-3. Place `worlddownloader-1.0.0.jar` in your `.minecraft/mods` folder
-4. Launch Minecraft with the Fabric profile
-
-## Usage
-
-1. Join a multiplayer server
-2. Wait for chunks to load around you
-3. Press **F9** to start downloading
-4. Walk around to capture more chunks as they load
-5. Press **F9** again to stop downloading
-
-Downloaded worlds are saved to `.minecraft/saves/WDL_<server>_<timestamp>/`
-
-## What Gets Saved
-
-- Terrain and block data
-- Block entities (chests, barrels, furnaces, signs, banners, etc.)
-- Container inventories
-- Entities (mobs, animals, dropped items, minecarts, etc.)
-- Multiple dimensions
+2. Install Fabric API
+3. Place `servertools-1.0.0.jar` in `.minecraft/mods/`
 
 ## Keybinds
 
 | Key | Action |
 |-----|--------|
-| F9  | Toggle world download on/off |
+| F9 | Toggle chunk download |
+| J | Capture menu |
+| B | Capture NPC |
+| K | Toggle sound capture |
+| N | Toggle sequence capture |
+| H | Capture map |
+| G | Toggle head capture |
+| P | Toggle armor stand capture |
 
-## Notes
-
-- Only chunks that are loaded on your client can be downloaded
-- The mod captures data as your client receives it from the server
-- Downloaded worlds use a flat world generator for unexplored areas
-- Player entities are not saved
-
-## Building from Source
+## Building
 
 ```bash
 ./gradlew build
 ```
 
-The compiled JAR will be in `build/libs/`.
+Output: `build/libs/servertools-1.0.0.jar`
 
 ## License
 
-CC0-1.0
+CC0-1.0 (Public Domain)

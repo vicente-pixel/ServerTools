@@ -22,12 +22,13 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"worlddownloader" {
+		"servertools" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
 	}
 
+	accessWidenerPath = file("src/main/resources/servertools.accesswidener")
 }
 
 dependencies {
