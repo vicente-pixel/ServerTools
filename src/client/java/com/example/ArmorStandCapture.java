@@ -142,10 +142,10 @@ public class ArmorStandCapture {
                 continue;
             }
 
-            // Get block position (rounded coords)
+            // Get block position (rounded coords) - Y offset +2 for fairy souls
             BlockPos pos = new BlockPos(
                 (int) Math.floor(armorStand.getX()),
-                (int) Math.floor(armorStand.getY()),
+                (int) Math.floor(armorStand.getY()) + 2,
                 (int) Math.floor(armorStand.getZ())
             );
 

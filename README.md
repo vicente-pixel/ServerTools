@@ -12,7 +12,7 @@ A Fabric mod for Minecraft 1.21.x that provides a collection of tools for captur
 - **Sound Capture (K/N)** - Record playing sounds and sequences
 - **Map Capture (H)** - Capture map art pixel data
 - **Head Capture (G)** - Scan for armor stands with player heads
-  - **Fairy Soul Capture (P)** - Scan for fairy souls in the SkyBlock hub only 
+  - **Fairy Soul Capture (P)** - Scan for fairy souls in the SkyBlockmake it  makmak hub only 
 - **Chat Copy (Ctrl/Cmd+C)** - Copy chat messages with color formatting
 
 ## Requirements
