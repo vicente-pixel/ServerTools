@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"package": "com.example.mixin.client",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"ClientPacketListenerMixin",
+		"MinecraftMixin",
+		"SoundManagerAccessor",
+		"SoundEngineAccessor",
+		"ChatComponentAccessor",
+		"ChatComponentMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

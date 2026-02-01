@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "servertools",
+	"version": "1.0.0",
+	"name": "Server Tools",
+	"description": "A collection of tools for capturing and downloading server data: chunks, NPCs, menus, sounds, maps, and more.",
+	"authors": [],
+	"contact": {},
+	"license": "CC0-1.0",
+	"icon": "assets/servertools/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.example.ServerToolsClient"
+		]
+	},
+	"accessWidener": "servertools.accesswidener",
+	"mixins": [
+		{
+			"config": "servertools.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.2",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

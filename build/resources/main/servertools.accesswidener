@@ -1,0 +1,8 @@
+accessWidener v2 named
+
+# Access the SoundEngine from SoundManager
+accessible field net/minecraft/client/sounds/SoundManager soundEngine Lnet/minecraft/client/sounds/SoundEngine;
+
+# Access the playing sounds map from SoundEngine
+accessible field net/minecraft/client/sounds/SoundEngine instanceToChannel Ljava/util/Map;
+accessible field net/minecraft/client/sounds/SoundEngine instanceBySource Lcom/google/common/collect/Multimap;
