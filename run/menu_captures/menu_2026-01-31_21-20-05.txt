@@ -1,9 +1,0 @@
-SCR:ContainerScreen
-TTL:Large Chest
-DIM:427x240
----SLOTS---
-31:copper_chestx64
-32-80:_
-81:leaf_litterx45
-82:chestx64
-TOT:90 slots
